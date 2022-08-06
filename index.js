@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json())
 
-const uri = 'mongodb+srv://Arshad:mUxt_5L7eni9KdU@cluster0.piuzs.mongodb.net/doctors_portal?retryWrites=true&w=majority';
+const uri = `mongodb+srv://Arshad:${process.env.DB_PASS}@cluster0.piuzs.mongodb.net/doctors_portal?retryWrites=true&w=majority`;
 console.log(uri)
 const client = new MongoClient(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -28,6 +28,14 @@ async function run() {
       const appointments = await cursor.toArray()
       res.json(appointments)
     })
+    // app.get('/users', async(req, res)=> {
+    //   const email = req.query.email;
+    //   const date = new Date(req.query.date).toLocaleDateString();
+    //   const query = {email: email, date: date}
+    //   const cursor = appointmentsCollection.find(query)
+    //   const appointments = await cursor.toArray()
+    //   res.json(appointments)
+    // })
 
     app.post('/appointments', async(req, res) => {
       const appointment = req.body;
