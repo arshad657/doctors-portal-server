@@ -5,6 +5,8 @@ const app = express()
 const cors = require('cors');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
+const objectId = require('mongodb').ObjectId
+
 
 app.use(cors());
 app.use(express.json())
@@ -34,6 +36,12 @@ async function run() {
       const result = await appointmentsCollection.insertOne(appointment);
       console.log(result)
       res.json(result)
+    })
+    app.delete('/appointments/:id', async(req, res) => {
+      id = req.params.id;
+      const query = {_id: objectId(id)}
+      const result = await appointmentsCollection.deleteOne(query)
+      res.send(result)
     })
 
     app.post('/users', async(req, res) => {
