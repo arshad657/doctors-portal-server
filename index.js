@@ -30,6 +30,25 @@ async function run() {
       const appointments = await cursor.toArray()
       res.json(appointments)
     })
+    app.get('/allappointments', async(req, res)=> {
+      const cursor = appointmentsCollection.find()
+      const appointments = await cursor.toArray()
+      res.send(appointments)
+      // console.log('hi')
+    })
+    app.get('/users/admin/:email', async(req, res)=> {
+      const email = req.params.email
+      const query = {email: email}
+      const user = await usersCollection.findOne(query)
+      res.send({isAdmin: user.role === 'admin'})
+      // console.log('hi')
+    })
+    app.get('/allusers', async(req, res)=> {
+      const cursor = usersCollection.find()
+      const users = await cursor.toArray()
+      res.send(users)
+      // console.log('hi')
+    })
 
     app.post('/appointments', async(req, res) => {
       const appointment = req.body;
@@ -59,6 +78,15 @@ async function run() {
       const updateDoc = {$set: user}
       const result = await usersCollection.updateOne(filter, updateDoc, options);
       res.json(result)
+    })
+    app.put('/user/admin/:id', async(req, res) => {
+      const id = req.params.id;
+      const filter = {_id: objectId(id)};
+      const updateDoc = {
+        $set: {status: 'completed'},
+      };
+      const result = await appointmentsCollection.updateOne(filter, updateDoc);
+      res.send(result)
     })
     
     console.log('database connected successfully')
